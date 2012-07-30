@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>JavaScript Code Sample</title>
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.0.6/css/ui-dark.css" rel="stylesheet">
+    <script src="//Microsoft.WinJS.0.6/js/base.js"></script>
+    <script src="//Microsoft.WinJS.0.6/js/ui.js"></script>
+    <!-- JavaScript Code Sample references -->
+    <script src="/js/default.js"></script>
+    <link href="/css/default.css" rel="stylesheet">
+    <!-- Developer-defined references -->
+    <script src="///LiveSDKHTML/js/wl.js"></script>
+    <script src="/js/gather_info.js"></script>    
+</head>
+    <body>
+<div id='sign-in-ctrl'></div>
+        <div id="info"></div>
+<script type='text/javascript' >
+    // Set locale value before invoking WL.init().
+  /*  var rm = Windows.ApplicationModel.Resources.Core.ResourceManager;
+    rm.current.defaultContext.languages = ['en'];
+
+    WL.init({
+        scope: ['wl.signin']
+    });
+
+
+    WL.login({
+        scope: ['wl.signin']
+    }).then(
+     function (response) {
+         document.getElementById("info").innerText =  response;
+     },
+     function (response) {
+         document.getElementById("info").innerText =  response;
+     }
+ );*/
+   
+    WL.init({ client_id: "00000000440CE91C", redirect_uri: "http://apple.com/" });
+
+    WL.login(
+        { "scope": "wl.basic" },
+        function (response) {
+            if (response.status == "connected") {
+                showUserData();
+            }
+            else {
+                log("Could not connect, status = " + response.status);
+            }
+        });
+
+    function showUserData() {
+        WL.api(
+            "/me", "GET",
+            function (response) {
+                if (!response.error) {
+                    log(JSON.stringify(response).replace(/,/g, "\n"));
+                }
+                else {
+                    log("API call failed: " + JSON.stringify(response.error).replace(/,/g, "\n"));
+                }
+            }
+        );
+    }
+
+    function log(message) {
+        var child = document.createTextNode(message);
+        var parent = document.body;
+        parent.appendChild(child);
+        parent.appendChild(document.createElement("br"));
+    }
+
+</script>
+
+</body>
+    </html>
